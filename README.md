@@ -65,6 +65,8 @@ Este projeto foi desenvolvido utilizando as seguintes tecnologias:
 ### C. Para Codigo Python
  1.✔️ excute: 
 - `python main.py` 
+- `python yolo_openpose.py --image images/photo.jpg`
+Este script utiliza YOLOv4 para localizar pessoas e o OpenPose para estimar 18 keypoints. Para personalizar para 12 pontos, ajuste `nPoints` e `POSE_PAIRS` conforme seu modelo.
  
  ## :memo: Licença
 Este projeto esta sobe a licença MIT. Consulte a [LICENÇA](https://github.com/issufibadji/profileissufibadji/blob/master/LINCENSE) para obter mais informações.
