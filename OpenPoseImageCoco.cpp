@@ -10,28 +10,44 @@ using namespace cv::dnn;
 
 //DEFINDO MODELO
 #define COCO
-const int POSE_PAIRS[10][2] = {
-    {0,1},    // Cabeça → Peito
-    {1,2},    // Peito → Ombro esquerdo
-    {1,3},    // Peito → Ombro direito
-    {2,4},    // Ombro esquerdo → Cotovelo esquerdo
-    {3,5},    // Ombro direito → Cotovelo direito
-    {4,6},    // Cotovelo esquerdo → Pulso esquerdo
-    {5,7},    // Cotovelo direito → Pulso direito
-    {1,8},    // Peito → Joelho esquerdo
-    {8,9},    // Joelho esquerdo → Tornozelo esquerdo
-    {1,10},   // Peito → Joelho direito
-    // {10,11} opcional se quiser fechar até tornozelo dir
-    {10,11}   // Joelho direito → Tornozelo direito
+
+// Mapeia os 18 pontos do modelo COCO para os 12 usados nesta versão leve
+static const int BODY_PART_MAP[12] = {
+    0,   // nariz → cabeca
+    1,   // pescoco/peito
+    5,   // ombro esquerdo
+    2,   // ombro direito
+    6,   // cotovelo esquerdo
+    3,   // cotovelo direito
+    7,   // pulso esquerdo
+    4,   // pulso direito
+    12,  // joelho esquerdo
+    13,  // tornozelo esquerdo
+    9,   // joelho direito
+    10   // tornozelo direito
+};
+
+// Conexões do esqueleto para 12 pontos
+static const int POSE_PAIRS[11][2] = {
+    {0,1},   // Cabeca → Peito
+    {1,2},   // Peito → Ombro esquerdo
+    {1,3},   // Peito → Ombro direito
+    {2,4},   // Ombro esquerdo → Cotovelo esquerdo
+    {3,5},   // Ombro direito → Cotovelo direito
+    {4,6},   // Cotovelo esquerdo → Pulso esquerdo
+    {5,7},   // Cotovelo direito → Pulso direito
+    {1,8},   // Peito → Joelho esquerdo
+    {8,9},   // Joelho esquerdo → Tornozelo esquerdo
+    {1,10},  // Peito → Joelho direito
+    {10,11}  // Joelho direito → Tornozelo direito
 };
 
 //Acessando rquitetura da rede neural
 string protoFile = "coco/pose_deploy_linevec.prototxt";
 //Armazena os pesos do modelo treinado
 string weightsFile = "coco/pose_iter_440000.caffemodel";
-//18 pontos de corpos
-int nPoints = 12;
-#endif
+// Total de pontos utilizados
+const int nPoints = 12;
 //
 int main(int argc, char **argv)
 {
@@ -58,8 +74,8 @@ int main(int argc, char **argv)
     }
 
  // Definindo as dimensões da imagem de entrada(altura e largura)
-    int inWidth = 368;
-    int inHeight = 368;
+    int inWidth = 256;
+    int inHeight = 256;
     float thresh = 0.1;    
  //ler img
     Mat frame = imread(imageFile);
@@ -104,7 +120,7 @@ int main(int argc, char **argv)
     for (int n=0; n < nPoints; n++)
     {
         // Mapa de probabilidade da parte do corpo correspondente.
-        Mat probMap(H, W, CV_32F, output.ptr(0,n));
+        Mat probMap(H, W, CV_32F, output.ptr(0, BODY_PART_MAP[n]));
 
         Point2f p(-1,-1);
         Point maxLoc;
@@ -137,9 +153,9 @@ int main(int argc, char **argv)
         if (partA.x<=0 || partA.y<=0 || partB.x<=0 || partB.y<=0)
             continue;
 
-        line(frame, partA, partB, Scalar(0,255,255), 6);
-        circle(frame, partA, 8, Scalar(0,0,255), -1);
-        circle(frame, partB, 8, Scalar(0,0,255), -1);
+        line(frame, partA, partB, Scalar(0,255,0), 3, LINE_AA);
+        circle(frame, partA, 5, Scalar(0,0,255), FILLED);
+        circle(frame, partB, 5, Scalar(0,0,255), FILLED);
 
     }
 
