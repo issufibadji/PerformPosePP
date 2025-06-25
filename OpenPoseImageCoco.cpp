@@ -10,15 +10,19 @@ using namespace cv::dnn;
 
 //DEFINDO MODELO
 #define COCO
-#ifdef COCO
-const int POSE_PAIRS[17][2] = 
-{   
-    {1,2}, {1,5}, {2,3},
-    {3,4}, {5,6}, {6,7},
-    {1,8}, {8,9}, {9,10},
-    {1,11}, {11,12}, {12,13},
-    {1,0}, {0,14},
-    {14,16}, {0,15}, {15,17}
+const int POSE_PAIRS[10][2] = {
+    {0,1},    // Cabeça → Peito
+    {1,2},    // Peito → Ombro esquerdo
+    {1,3},    // Peito → Ombro direito
+    {2,4},    // Ombro esquerdo → Cotovelo esquerdo
+    {3,5},    // Ombro direito → Cotovelo direito
+    {4,6},    // Cotovelo esquerdo → Pulso esquerdo
+    {5,7},    // Cotovelo direito → Pulso direito
+    {1,8},    // Peito → Joelho esquerdo
+    {8,9},    // Joelho esquerdo → Tornozelo esquerdo
+    {1,10},   // Peito → Joelho direito
+    // {10,11} opcional se quiser fechar até tornozelo dir
+    {10,11}   // Joelho direito → Tornozelo direito
 };
 
 //Acessando rquitetura da rede neural
@@ -26,7 +30,7 @@ string protoFile = "coco/pose_deploy_linevec.prototxt";
 //Armazena os pesos do modelo treinado
 string weightsFile = "coco/pose_iter_440000.caffemodel";
 //18 pontos de corpos
-int nPoints = 18;
+int nPoints = 12;
 #endif
 //
 int main(int argc, char **argv)
