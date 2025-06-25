@@ -1,9 +1,14 @@
-TARGET=openpose_image_coco
+TARGETS=openpose_image_coco openpose_video_coco
 CXX=g++
 CXXFLAGS=`pkg-config --cflags --libs opencv4`
 
-$(TARGET): OpenPoseImageCoco.cpp
-	$(CXX) OpenPoseImageCoco.cpp -o $(TARGET) $(CXXFLAGS)
+all: $(TARGETS)
+
+openpose_image_coco: OpenPoseImageCoco.cpp
+	$(CXX) OpenPoseImageCoco.cpp -o $@ $(CXXFLAGS)
+
+openpose_video_coco: OpenPoseVideo.cpp
+	$(CXX) OpenPoseVideo.cpp -o $@ $(CXXFLAGS)
 
 clean:
-	rm -f $(TARGET)
+	rm -f $(TARGETS)
